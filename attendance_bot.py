@@ -99,7 +99,7 @@ async def get_today_table(update: Update, context: CallbackContext) -> None:
 
 # Функция для получения всей таблицы посещений
 async def get_table(update: Update, context: CallbackContext) -> None:
-     # Преобразуем столбец 'Check-in Time' в формат datetime, если это не было сделано
+     # Преобразуем столбец 'Check-in Time' в формат datetime
     attendance['Check-in Time'] = pd.to_datetime(attendance['Check-in Time'])
     
     if attendance.empty:
