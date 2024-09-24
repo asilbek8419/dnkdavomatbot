@@ -80,8 +80,11 @@ async def handle_late_response(update: Update, context: CallbackContext) -> None
 
 # Функция для получения таблицы за текущий день
 async def get_today_table(update: Update, context: CallbackContext) -> None:
-    now = datetime.now()
+    now = datetime.now(TASHKENT_TZ)
     today = now.date()
+    
+    # Преобразуем столбец 'Check-in Time' в формат datetime, если это не было сделано
+    attendance['Check-in Time'] = pd.to_datetime(attendance['Check-in Time'])
     
     # Фильтрация записей по текущей дате
     today_attendance = attendance[attendance['Check-in Time'].dt.date == today]
