@@ -4,7 +4,9 @@ from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
 from telegram.ext import Application, CommandHandler, MessageHandler, CallbackContext, filters
 import pandas as pd
 from datetime import datetime
+import pytz
 from tabulate import tabulate  # Для форматирования таблицы
+
 
 # Загружаем переменные окружения из .env файла
 load_dotenv()
@@ -43,16 +45,20 @@ async def handle_start_button(update: Update, context: CallbackContext) -> None:
         reply_markup=main_keyboard
     )
 
+# Установите временную зону Ташкента
+TASHKENT_TZ = pytz.timezone('Asia/Tashkent')
+
 # Функция для отметки прибытия
 async def checkin(update: Update, context: CallbackContext) -> None:
     user = update.effective_user
-    now = datetime.now()
+    now = datetime.now(TASHKENT_TZ)
     attendance.loc[len(attendance)] = [user.username, now, 'Во время', '', 0]
     await update.message.reply_text(f'{user.username}, вы отметились в {now.strftime("%Y-%m-%d %H:%M:%S")}')
 
 # Функция для отметки опоздания
 async def late(update: Update, context: CallbackContext) -> None:
     user = update.effective_user
+    now = datetime.now(TASHKENT_TZ)  # Используем ту же временную зону
     await update.message.reply_text(f'{user.username}, введите причину опоздания и количество минут (например: "Пробка 15").')
 
 # Обработчик для ввода причины опоздания и количества минут
