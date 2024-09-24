@@ -1,1 +1,1 @@
-worker: py attendance_bot.py
+worker: python attendance_bot.py
