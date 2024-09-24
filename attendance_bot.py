@@ -58,7 +58,6 @@ async def checkin(update: Update, context: CallbackContext) -> None:
 # Функция для отметки опоздания
 async def late(update: Update, context: CallbackContext) -> None:
     user = update.effective_user
-    now = datetime.now(TASHKENT_TZ)  # Используем ту же временную зону
     await update.message.reply_text(f'{user.username}, введите причину опоздания и количество минут (например: "Пробка 15").')
 
 # Обработчик для ввода причины опоздания и количества минут
@@ -68,7 +67,7 @@ async def handle_late_response(update: Update, context: CallbackContext) -> None
         message_text = update.message.text
         reason, delay = message_text.rsplit(' ', 1)
         delay = int(delay)
-        now = datetime.now()
+        now = datetime.now(TASHKENT_TZ)  # Используем ту же временную зону
         attendance.loc[len(attendance)] = [user.username, now, 'Опоздание', reason, delay]
         
         await update.message.reply_text(f'{user.username}, вы отметили опоздание в {now.strftime("%Y-%m-%d %H:%M:%S")}. Причина: {reason}, Опоздание: {delay} минут.')
@@ -81,7 +80,7 @@ async def handle_late_response(update: Update, context: CallbackContext) -> None
 
 # Функция для получения таблицы за текущий день
 async def get_today_table(update: Update, context: CallbackContext) -> None:
-    now = datetime.now()
+    now = datetime.now(TASHKENT_TZ)
     today = now.date()
     
     # Фильтрация записей по текущей дате
