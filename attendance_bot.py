@@ -12,7 +12,7 @@ from tabulate import tabulate  # Для форматирования табли�
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 
 # Ваш ID для уведомлений
-YOUR_CHAT_ID = int(os.getenv("YOUR_CHAT_ID"))  # Убедитесь, что ваш chat_id настроен в Railway
+YOUR_CHAT_ID = os.getenv("YOUR_CHAT_ID")  # Убедитесь, что ваш chat_id настроен в Railway
 
 # Логирование для отслеживания работы бота
 logging.basicConfig(
