@@ -1,5 +1,5 @@
 import os
-from dotenv import load_dotenv
+import logging
 from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
 from telegram.ext import Application, CommandHandler, MessageHandler, CallbackContext, filters
 import pandas as pd
@@ -8,14 +8,18 @@ import pytz
 from tabulate import tabulate  # Для форматирования таблицы
 
 
-# Загружаем переменные окружения из .env файла
-load_dotenv()
-
-# Читаем токен бота из .env
+# Читаем токен бота из переменной окружения
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 
 # Ваш ID для уведомлений
-YOUR_CHAT_ID = 72215648  # Замените на ваш реальный chat_id
+YOUR_CHAT_ID = int(os.getenv("YOUR_CHAT_ID"))  # Убедитесь, что ваш chat_id настроен в Railway
+
+# Логирование для отслеживания работы бота
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
+logger = logging.getLogger(__name__)
 
 # Инициализация таблицы посещений
 attendance = pd.DataFrame(columns=['Employee', 'Check-in Time', 'Status', 'Reason', 'Delay (minutes)'])
@@ -118,9 +122,9 @@ async def clear_attendance(update: Update, context: CallbackContext) -> None:
 
 # Основная функция для запуска бота
 def main() -> None:
-    # Убедитесь, что токен успешно загружен из .env
+    # Убедитесь, что токен успешно загружен из переменной окружения
     if TELEGRAM_TOKEN is None:
-        raise ValueError("Токен Telegram не найден. Убедитесь, что файл .env правильно настроен.")
+        raise ValueError("Токен Telegram не найден. Убедитесь, что переменная окружения TELEGRAM_TOKEN правильно настроена.")
 
     # Инициализация бота
     application = Application.builder().token(TELEGRAM_TOKEN).build()
